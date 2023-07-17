@@ -10,8 +10,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
             padding: 20px;
+        }
+
+        .dark-mode {
+            background-color: #222;
+            color: #fff;
         }
 
         .welcome-message {
@@ -100,6 +104,11 @@
                         window.location.href = "home.html";
                     }
                 });
+            });
+
+            // Dark mode toggle click event handler
+            document.getElementById("dark-mode-toggle").addEventListener("click", function() {
+                document.body.classList.toggle("dark-mode");
             });
 
             // Send message form submit event handler
@@ -195,6 +204,10 @@
                         <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
                             <h2>Tab 3 Content</h2>
                             <p>This is the content of Tab 3.</p>
+                            <div class="form-group">
+                                <label for="dark-mode-toggle">Dark Mode:</label>
+                                <input type="checkbox" id="dark-mode-toggle">
+                            </div>
                         </div>
                     </div>
                 </div>
