@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="shortcut icon" type="image/png" href="idk2.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logout-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logout-button button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-pills .nav-link {
+            text-align: left;
+            width: 100%;
+        }
+
+        .nav-pills {
+            flex-direction: column;
+        }
+
+        .tab-content .tab-pane {
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        .error-container {
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        .error-container h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .error-container p {
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            // Check if the user is signed in
+            var signedIn = localStorage.getItem("signedIn");
+            if (signedIn !== "true") {
+                // Hide the dashboard container
+                document.getElementById("dashboard-container").style.display = "none";
+
+                // Show the error container
+                document.getElementById("error-container").style.display = "block";
+
+                // Redirect to login page after 3 seconds
+                setTimeout(function() {
+                    window.location.href = "home.html";
+                }, 3000);
+            }
+
+            // Log out button click event handler
+            document.getElementById("logout-button").addEventListener("click", function() {
+                // Remove the sign-in status from local storage
+                localStorage.removeItem("signedIn");
+
+                Swal.fire({
+                    title: "Logged Out",
+                    text: "You have been logged out successfully.",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    onAfterClose: function() {
+                        // Redirect to the sign-in page
+                        window.location.href = "home.html";
+                    }
+                });
+            });
+
+            // Send message form submit event handler
+            document.getElementById("discord-form").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                var webhookUrl = document.getElementById("webhook-url").value;
+                var messageContent = document.getElementById("message-content").value;
+
+                // Create the message data
+                var messageData = {
+                    content: messageContent
+                };
+
+                // Send the message to the webhook URL
+                $.ajax({
+                    url: webhookUrl,
+                    type: "POST",
+                    data: JSON.stringify(messageData),
+                    contentType: "application/json",
+                    success: function() {
+                        Swal.fire({
+                            title: "Message Sent",
+                            text: "Your message has been sent successfully.",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        });
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: "Error",
+                            text: "An error occurred while sending the message. Please try again.",
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="dashboard-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h1>Dashboard</h1>
+                    <div class="welcome-message">
+                        
+                    </div>
+                    <div class="nav flex-column nav-pills" id="dashboard-tabs" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link active" id="tab1-tab" data-toggle="pill" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true"><i class="fas fa-paper-plane"></i> Send Message</a>
+                        <a class="nav-link" id="tab2-tab" data-toggle="pill" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false"><i class="fas fa-info-circle"></i> Tab 2 Content</a>
+                        <a class="nav-link" id="tab3-tab" data-toggle="pill" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false"><i class="fas fa-cog"></i> Tab 3 Content</a>
+                    </div>
+                    <div class="logout-button">
+                        <button id="logout-button">Log Out</button>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content" id="dashboard-tab-content">
+                        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                            <h2>Send Message</h2>
+                            <form id="discord-form">
+                                <div class="form-group">
+                                    <label for="webhook-url">Webhook URL:</label>
+                                    <input type="text" class="form-control" id="webhook-url" name="webhook-url" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-content">Message Content:</label>
+                                    <textarea class="form-control" id="message-content" name="message-content" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Message</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                            <h2>Tab 2 Content</h2>
+                            <p>This is the content of Tab 2.</p>
+                        </div>
+                        <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+                            <h2>Tab 3 Content</h2>
+                            <p>This is the content of Tab 3.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-container" class="error-container" style="display: none;">
+        <h1>Access Denied!</h1>
+        <p>Please sign in to access the dashboard.</p>
+    </div>
+</body>
+</html>

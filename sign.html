@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Ever Website</title>
+    <link rel="shortcut icon" type="image/png" href="idk2.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        p {
+            color: #555;
+            text-align: center;
+        }
+        
+        .signin-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin-top: 15px;
+        }
+        
+        .signup-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin-top: 15px;
+        }
+        
+        .form-container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+    <script>
+        // Function to hash the password using SHA-256 algorithm
+        function hashPassword(password) {
+            return sha256(password);
+        }
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            // Check if the user is already signed in
+            var signedIn = localStorage.getItem("signedIn");
+            if (signedIn === "true") {
+                // Redirect to the dashboard
+                window.location.href = "dashboard.html";
+            }
+
+            document.getElementById("signin-form").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                var username = document.getElementById("username").value;
+                var password = document.getElementById("password").value;
+
+                // Hash the entered password
+                var hashedPassword = hashPassword(password);
+
+                // Compare the username and hashed password
+                if (username === "Tim" && hashedPassword === "ddddacb6742a29ad70762a0457b124b872463c20e05d3093edd3cad3e5fbb487") {
+                    // Set the signed-in status in local storage
+                    localStorage.setItem("signedIn", "true");
+
+                    Swal.fire({
+                        title: "Login Successful!",
+                        text: "Welcome, Tim!",
+                        icon: "success",
+                        confirmButtonText: "Continue"
+                    }).then(function() {
+                        // Redirect to the dashboard
+                        window.location.href = "dashboard.html";
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Invalid Credentials",
+                        text: "Please try again with correct username and password.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>WELCOME</h1> 
+    <p>I really hope it works! It doesn't have anything... yet...</p>
+    <div class="form-container">
+        <form id="signin-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button class="signin-button">Sign In</button>
+        </form>
+        <a href="new.html" class="signup-button">Request a new account</a>
+    </div>
+    <script>
+        // Check if the user is already signed in
+        var signedIn = localStorage.getItem("signedIn");
+        if (signedIn === "true") {
+            // Redirect to the dashboard
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>
